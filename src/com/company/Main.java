@@ -5,36 +5,56 @@ import java.sql.*;
 import java.util.Scanner;
 
 class Vehicle {
-    int amount;
-    String name;
+    private int amount;
+    private String name;
 
+    public int getAmount() {
+        return amount;
+    }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }
-
-
 
 
 class VehiclesDao {
     Connection con = null;
 
 
-    void connection() throws SQLException, ClassNotFoundException {
+    void connection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-        Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ganesh", "root", "elclassico");
 
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ganesh", "root", "elclassico");
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
 
     }
 
 
-    void addVehicle(Vehicle v) throws SQLException {
-        String query = "insert into jdbc1 values(?,?)";
-        PreparedStatement pst = con.prepareStatement(query);
-        pst.setString(1, v.name);
-        pst.setInt(2, v.amount);
-        pst.executeUpdate();
+    void addVehicle(Vehicle v) {
+        try {
+            String query = "insert into jdbc1 values(?,?)";
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setString(1, v.getName());
+            pst.setInt(2, v.getAmount());
+            pst.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -43,16 +63,15 @@ class VehiclesDao {
 class Main {
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
-//JBBC STATEMENTs
 
         Vehicle v1 = new Vehicle();
-        v1.name="Car";
-        v1.amount=500;
+        v1.setName("Car");
+        v1.setAmount(500);
         Vehicle v2 = new Vehicle();
-        v2.amount=200;
-        v2.name="Bike";
+        v2.setAmount(200);
+        v2.setName("Bike");
         VehiclesDao dao = new VehiclesDao();
         dao.connection();
 
